@@ -2,8 +2,7 @@ require "rails_helper"
 
 # テナント分離専用テスト。
 # 「Aのadminでログインして叩く」。期待値の「404」は HTTP 404 かつ本文にBのデータを含まないこと。
-# #8・#9 は O1（お知らせ文作成）・O2（雇用条件確認書PDF）に着手した場合のみで、今回は未着手のため対象外。
-# #10 のPDF／CSV系は tenant_isolation_exports_spec.rb。
+# PDF／CSV の出力系は tenant_isolation_exports_spec.rb。
 RSpec.describe "テナント分離" do
   include_context "two organizations"
 

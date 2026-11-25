@@ -1,7 +1,7 @@
 require "rails_helper"
 require "csv"
 
-# テナント分離（出力系）：テナント分離 #10（PDF／CSV）。#8・#9 は O1・O2 未着手のため対象外。
+# テナント分離（出力系）：PDF／CSV で他組織のデータが出ないこと。
 RSpec.describe "テナント分離（PDF・CSV）" do
   include_context "two organizations"
 
