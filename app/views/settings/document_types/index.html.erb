@@ -1,0 +1,42 @@
+<% content_for :title, "書類種別" %>
+<h1>書類種別</h1>
+<%= render "settings/nav" %>
+<p class="muted">
+  新しい書類種別を追加すると、在籍中の全スタッフに「未提出」の行が作られます。
+  提出済み・承認済み・期限切れの書類が紐づく種別は削除できません。
+</p>
+
+<div class="actions">
+  <%= link_to "書類種別を追加", new_settings_document_type_path, class: "button" %>
+</div>
+
+<% if @document_types.empty? %>
+  <div class="card empty">書類種別がありません。</div>
+<% else %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>必須</th>
+          <th class="num">更新間隔（か月）</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @document_types.each do |document_type| %>
+          <tr>
+            <td><%= document_type.name %></td>
+            <td><%= document_type.required ? "必須" : "任意" %></td>
+            <td class="num"><%= document_type.renew_interval_months || "—" %></td>
+            <td>
+              <%= link_to "編集", edit_settings_document_type_path(document_type), class: "button-link" %>
+              <%= button_to "削除", settings_document_type_path(document_type), method: :delete, class: "danger",
+                            form: { style: "display:inline", data: { turbo_confirm: "この書類種別を削除します。よろしいですか？" } } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

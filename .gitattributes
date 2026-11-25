@@ -1,0 +1,6 @@
+# 改行コードの固定（Windowsのバッチは CRLF、Rubyスクリプトとbin/*は LF）
+*.bat text eol=crlf
+*.rb text eol=lf
+bin/* text eol=lf
+*.rake text eol=lf
+*.erb text eol=lf

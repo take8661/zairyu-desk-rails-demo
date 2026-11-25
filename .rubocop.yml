@@ -1,0 +1,12 @@
+# Omakase Ruby styling for Rails（rubocop-rails-omakase。違反0が完了条件）
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+AllCops:
+  Exclude:
+    - "db/schema.rb"
+    - "bin/**/*"
+    - "vendor/**/*"
+    - "tmp/**/*"
+    - "storage/**/*"
+    - "coverage/**/*"
+    - "node_modules/**/*"

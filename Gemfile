@@ -1,0 +1,59 @@
+source "https://rubygems.org"
+
+ruby ">= 3.2"
+
+gem "rails", "~> 8.1.4", ">= 8.1.4.1"
+# The modern asset pipeline for Rails [https://github.com/rails/propshaft]
+gem "propshaft"
+# Use sqlite3 as the database for Active Record
+gem "sqlite3", ">= 2.1"
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
+# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "importmap-rails"
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+gem "bcrypt", "~> 3.1.7"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
+
+# 日本語化（検証メッセージ・日付表示）
+gem "rails-i18n"
+
+# 提出用CSV。Ruby 3.4 では csv が bundled gem になり、Bundler 経由では明示が必要
+gem "csv"
+
+# PDF出力（日本語は vendor/fonts の静的TTFを使う）
+gem "prawn", "~> 2.5"
+gem "prawn-table", "~> 0.2.2"
+
+group :development, :test do
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # Audits gems for known security defects (use config/bundler-audit.yml to ignore issues)
+  gem "bundler-audit", require: false
+
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem "brakeman", require: false
+
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
+end
+
+group :development do
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
+end
+
+group :test do
+  gem "capybara"
+  gem "webmock"
+  gem "simplecov", require: false
+  gem "pdf-reader"
+end

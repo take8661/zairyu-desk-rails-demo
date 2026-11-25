@@ -1,0 +1,29 @@
+# 秘密情報・環境依存ファイルはコミットしない
+/config/master.key
+/config/credentials/*.key
+/.env
+/.env.*
+!/.env.example
+
+# ログ・一時ファイル・DB
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/.keep
+
+# テストの出力
+/coverage/
+
+# アセットのビルド結果
+/public/assets
+
+# Bundler
+/.bundle
+/vendor/bundle
+
+# エディタ
+.DS_Store

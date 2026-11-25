@@ -1,0 +1,17 @@
+<% content_for :title, "ログイン" %>
+<section class="card narrow">
+  <h1>ログイン</h1>
+  <p class="muted">外国人スタッフの在留期限・提出書類を管理するデモアプリです。デモ用のログイン情報はREADMEを参照してください。</p>
+
+  <%= form_with url: session_path do |form| %>
+    <div class="field">
+      <%= form.label :email_address, "メールアドレス" %>
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[:email_address] %>
+    </div>
+    <div class="field">
+      <%= form.label :password, "パスワード" %>
+      <%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %>
+    </div>
+    <%= form.submit "ログイン", class: "button" %>
+  <% end %>
+</section>

@@ -1,0 +1,64 @@
+<% content_for :title, "スタッフ一覧" %>
+<h1>スタッフ一覧</h1>
+
+<%= form_with url: staff_members_path, method: :get, class: "filters" do |form| %>
+  <div class="field">
+    <%= form.label :q, "検索（社員コード・氏名・カナ）" %>
+    <%= form.text_field :q, value: @query %>
+  </div>
+  <div class="field">
+    <%= form.label :status_of_residence, "在留資格" %>
+    <%= form.select :status_of_residence, residence_status_options, { include_blank: "すべて", selected: @status_of_residence } %>
+  </div>
+  <div class="field">
+    <%= form.label :status, "在籍状況" %>
+    <%= form.select :status, [ [ "在籍中", "active" ], [ "退職", "left" ], [ "すべて", "all" ] ], { selected: @status } %>
+  </div>
+  <%= form.submit "絞り込む", name: nil %>
+  <%= link_to "条件をクリア", staff_members_path, class: "button-link" %>
+<% end %>
+
+<div class="actions">
+  <%= link_to "スタッフを登録", new_staff_member_path, class: "button" %>
+</div>
+
+<% if @staff_members.empty? %>
+  <div class="card empty">条件に合うスタッフがいません。</div>
+<% else %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>社員コード</th>
+          <th>氏名</th>
+          <th>国籍</th>
+          <th>在留資格</th>
+          <th>在留期間満了日</th>
+          <th class="num">残日数</th>
+          <th class="num">書類の未提出</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @staff_members.each do |staff| %>
+          <% card = staff.current_residence_card %>
+          <% days_left = staff.days_left %>
+          <tr>
+            <td><%= staff.employee_code %></td>
+            <td>
+              <%= link_to staff.full_name, staff_member_path(staff) %>
+              <% if staff.status == "left" %><span class="muted">（退職）</span><% end %>
+            </td>
+            <td><%= staff.nationality %></td>
+            <td><%= card&.status_of_residence %></td>
+            <td><%= date_text(card&.expires_on) %></td>
+            <td class="num">
+              <%= days_left_text(days_left) %>
+              <%= expiry_badge(ExpiryBand.for(days_left)) %>
+            </td>
+            <td class="num"><%= staff.missing_required_documents_count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

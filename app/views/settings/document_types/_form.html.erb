@@ -1,0 +1,21 @@
+<%= form_with model: document_type, url: (document_type.new_record? ? settings_document_types_path : settings_document_type_path(document_type)) do |form| %>
+  <%= render "shared/errors", record: document_type %>
+  <div class="field">
+    <%= form.label :name, "名称" %>
+    <%= form.text_field :name, required: true %>
+  </div>
+  <div class="field">
+    <label>
+      <%= form.check_box :required %>
+      必須書類にする（未提出・期限切れがダッシュボードに数えられます）
+    </label>
+  </div>
+  <div class="field">
+    <%= form.label :renew_interval_months, "更新間隔（か月。空なら期限なし）" %>
+    <%= form.number_field :renew_interval_months, min: 1, step: 1 %>
+  </div>
+  <div class="actions">
+    <%= form.submit document_type.new_record? ? "追加する" : "更新する" %>
+    <%= link_to "キャンセル", settings_document_types_path, class: "button-link" %>
+  </div>
+<% end %>

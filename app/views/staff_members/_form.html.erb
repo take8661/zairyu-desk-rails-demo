@@ -1,0 +1,103 @@
+<%= form_with model: staff_member do |form| %>
+  <%= render "shared/errors", record: staff_member %>
+
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :employee_code, "社員コード（必須）" %>
+      <%= form.text_field :employee_code, required: true %>
+    </div>
+    <div class="field">
+      <%= form.label :full_name, "氏名（必須）" %>
+      <%= form.text_field :full_name, required: true %>
+    </div>
+    <div class="field">
+      <%= form.label :full_name_kana, "氏名（カナ）" %>
+      <%= form.text_field :full_name_kana %>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :birth_on, "生年月日（必須）" %>
+      <%= form.date_field :birth_on, required: true %>
+    </div>
+    <div class="field">
+      <%= form.label :nationality, "国籍（必須）" %>
+      <%= form.text_field :nationality, required: true %>
+    </div>
+    <div class="field">
+      <%= form.label :preferred_language, "連絡に使う言語" %>
+      <%= form.select :preferred_language, language_options %>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :hired_on, "雇用開始日（必須）" %>
+      <%= form.date_field :hired_on, required: true %>
+    </div>
+    <div class="field">
+      <%= form.label :status, "在籍状況" %>
+      <%= form.select :status, [ [ "在籍中", "active" ], [ "退職", "left" ] ] %>
+    </div>
+    <div class="field">
+      <%= form.label :left_on, "退職日" %>
+      <%= form.date_field :left_on %>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :job_title, "職種" %>
+      <%= form.text_field :job_title %>
+    </div>
+    <div class="field">
+      <%= form.label :workplace, "就業場所" %>
+      <%= form.text_field :workplace %>
+    </div>
+    <div class="field">
+      <%= form.label :hourly_wage_yen, "時給（円）" %>
+      <%= form.number_field :hourly_wage_yen, min: 0, step: 1 %>
+    </div>
+    <div class="field">
+      <%= form.label :weekly_hours, "週所定労働時間" %>
+      <%= form.number_field :weekly_hours, min: 0, max: 168, step: 0.5 %>
+    </div>
+  </div>
+
+  <% if staff_member.new_record? %>
+    <h2>最初の在留カード</h2>
+    <%= form.fields_for :residence_cards do |card_form| %>
+      <div class="field-row">
+        <div class="field">
+          <%= card_form.label :status_of_residence, "在留資格（必須）" %>
+          <%= card_form.select :status_of_residence, residence_status_options, { include_blank: "選択してください" }, required: true %>
+        </div>
+        <div class="field">
+          <%= card_form.label :card_number_last4, "カード番号の下4桁（英数字）" %>
+          <%= card_form.text_field :card_number_last4, maxlength: 4, required: true %>
+        </div>
+        <div class="field">
+          <%= card_form.label :issued_on, "交付日" %>
+          <%= card_form.date_field :issued_on %>
+        </div>
+        <div class="field">
+          <%= card_form.label :expires_on, "在留期間満了日（必須）" %>
+          <%= card_form.date_field :expires_on, required: true %>
+        </div>
+      </div>
+      <div class="field">
+        <label>
+          <%= card_form.check_box :permission_for_activity %>
+          資格外活動許可あり
+        </label>
+      </div>
+    <% end %>
+    <p class="muted">在留カード番号は全桁を保存しません。下4桁だけを入力してください。</p>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit staff_member.new_record? ? "登録する" : "更新する" %>
+    <%= link_to "キャンセル", staff_member.new_record? ? staff_members_path : staff_member_path(staff_member), class: "button-link" %>
+  </div>
+<% end %>

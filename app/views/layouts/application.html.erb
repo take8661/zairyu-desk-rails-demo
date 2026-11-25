@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title><%= content_for(:title) ? "#{content_for(:title)} | Zairyu Desk" : "Zairyu Desk" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="application-name" content="Zairyu Desk">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+
+    <%# app/assets/stylesheets 配下のCSSをすべて読み込む %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <div class="demo-banner" role="note">架空のデータによるデモです</div>
+
+    <% if authenticated? && current_user %>
+      <header class="site-header">
+        <span class="brand">Zairyu Desk</span>
+        <nav aria-label="メインメニュー">
+          <%= link_to "ダッシュボード", root_path %>
+          <%= link_to "スタッフ", staff_members_path %>
+          <%= link_to "通知", notifications_path %>
+          <%= link_to "出力", reports_path %>
+          <% if current_user.admin? %>
+            <%= link_to "設定", settings_organization_path %>
+          <% end %>
+        </nav>
+        <div class="user-box">
+          <span><%= current_organization&.name %>／<%= current_user.email_address %>（<%= current_user.admin? ? "管理者" : "担当者" %>）</span>
+          <%= button_to "ログアウト", session_path, method: :delete, class: "button-link" %>
+        </div>
+      </header>
+    <% end %>
+
+    <main class="container">
+      <% if flash[:notice] %><p class="flash flash-notice" role="status"><%= flash[:notice] %></p><% end %>
+      <% if flash[:alert] %><p class="flash flash-alert" role="alert"><%= flash[:alert] %></p><% end %>
+      <%= yield %>
+    </main>
+
+    <footer class="site-footer">
+      Zairyu Desk（デモ）。登場する人物・企業・数値はすべて架空です。
+    </footer>
+  </body>
+</html>

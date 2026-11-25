@@ -1,0 +1,24 @@
+<% content_for :title, "組織設定" %>
+<h1>組織設定</h1>
+<%= render "settings/nav" %>
+
+<section class="card">
+  <h2 style="margin-top:0">組織情報</h2>
+  <dl class="details">
+    <dt>組織名</dt><dd><%= @organization.name %></dd>
+    <dt>識別子（slug）</dt><dd><%= @organization.slug %></dd>
+  </dl>
+  <div class="actions">
+    <%= link_to "組織名を変更", edit_settings_organization_path, class: "button secondary" %>
+  </div>
+</section>
+
+<section class="card">
+  <h2 style="margin-top:0">期限チェックの今すぐ実行</h2>
+  <p>
+    在留期限の通知の作成と、書類の有効期限切れの更新を、この組織について今すぐ実行します。
+    同じ日に何度押しても通知は増えません。
+    （起動時と、手動実行の rake タスク <code>zairyu:daily</code> でも同じ処理が走ります。本番ではSolid Queueの定期実行で毎日実行する想定です。）
+  </p>
+  <%= button_to "今すぐ実行", settings_run_jobs_path, method: :post %>
+</section>

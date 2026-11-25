@@ -1,0 +1,60 @@
+<% content_for :title, "ダッシュボード" %>
+<h1>ダッシュボード</h1>
+<p class="muted">在留期限が近い（または過ぎた）スタッフと、書類の不備を一目で確認できます。対象は在籍中（active）のスタッフです。</p>
+
+<div class="metrics">
+  <div class="metric <%= 'alert' if @metrics.expiring_within_90_days_count.positive? %>">
+    <div class="label">在留期限が90日以内</div>
+    <div class="value"><%= @metrics.expiring_within_90_days_count %><small>人</small></div>
+  </div>
+  <div class="metric <%= 'alert' if @metrics.expired_count.positive? %>">
+    <div class="label">在留期限切れ</div>
+    <div class="value"><%= @metrics.expired_count %><small>人</small></div>
+  </div>
+  <div class="metric <%= 'alert' if @metrics.missing_documents_count.positive? %>">
+    <div class="label">必須書類の未提出</div>
+    <div class="value"><%= @metrics.missing_documents_count %><small>件</small></div>
+  </div>
+  <div class="metric <%= 'alert' if @metrics.expired_documents_count.positive? %>">
+    <div class="label">書類の有効期限切れ</div>
+    <div class="value"><%= @metrics.expired_documents_count %><small>件</small></div>
+  </div>
+</div>
+
+<h2>期限の近い順（期限切れ・90日以内）</h2>
+<% rows = @metrics.upcoming_rows %>
+<% if rows.empty? %>
+  <div class="card empty">在留期限が90日以内のスタッフはいません。</div>
+<% else %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>社員コード</th>
+          <th>氏名</th>
+          <th>在留資格</th>
+          <th>在留期間満了日</th>
+          <th class="num">残日数</th>
+          <th>区分</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rows.each do |row| %>
+          <tr>
+            <td><%= row.staff_member.employee_code %></td>
+            <td><%= link_to row.staff_member.full_name, staff_member_path(row.staff_member) %></td>
+            <td><%= row.card.status_of_residence %></td>
+            <td><%= date_text(row.card.expires_on) %></td>
+            <td class="num"><%= days_left_text(row.days_left) %></td>
+            <td><%= expiry_badge(row.band) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<div class="actions">
+  <%= link_to "スタッフ一覧へ", staff_members_path, class: "button secondary" %>
+  <%= link_to "在留期限一覧PDFを出力", expiry_list_report_path(format: :pdf), class: "button secondary" %>
+</div>

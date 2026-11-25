@@ -1,0 +1,5 @@
+<% content_for :title, "スタッフ編集" %>
+<h1>スタッフ編集：<%= @staff_member.full_name %></h1>
+<div class="card">
+  <%= render "form", staff_member: @staff_member %>
+</div>

@@ -1,0 +1,37 @@
+<% content_for :title, "在留期間の更新" %>
+<h1>在留期間の更新を追加：<%= @staff_member.full_name %></h1>
+<p class="muted">在留期間が更新されたら、新しい在留カードの情報を追加します（過去の履歴は編集・削除せず残ります）。</p>
+
+<div class="card">
+  <%= form_with model: [ @staff_member, @residence_card ] do |form| %>
+    <%= render "shared/errors", record: @residence_card %>
+    <div class="field-row">
+      <div class="field">
+        <%= form.label :status_of_residence, "在留資格（必須）" %>
+        <%= form.select :status_of_residence, residence_status_options, { include_blank: "選択してください" }, required: true %>
+      </div>
+      <div class="field">
+        <%= form.label :card_number_last4, "カード番号の下4桁（英数字）" %>
+        <%= form.text_field :card_number_last4, maxlength: 4, required: true %>
+      </div>
+      <div class="field">
+        <%= form.label :issued_on, "交付日" %>
+        <%= form.date_field :issued_on %>
+      </div>
+      <div class="field">
+        <%= form.label :expires_on, "在留期間満了日（必須）" %>
+        <%= form.date_field :expires_on, required: true %>
+      </div>
+    </div>
+    <div class="field">
+      <label>
+        <%= form.check_box :permission_for_activity %>
+        資格外活動許可あり
+      </label>
+    </div>
+    <div class="actions">
+      <%= form.submit "追加する" %>
+      <%= link_to "キャンセル", staff_member_path(@staff_member), class: "button-link" %>
+    </div>
+  <% end %>
+</div>

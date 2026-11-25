@@ -1,0 +1,19 @@
+<%= form_with model: user, url: (user.new_record? ? settings_users_path : settings_user_path(user)) do |form| %>
+  <%= render "shared/errors", record: user %>
+  <div class="field">
+    <%= form.label :email_address, "メールアドレス" %>
+    <%= form.email_field :email_address, required: true, autocomplete: "off" %>
+  </div>
+  <div class="field">
+    <%= form.label :role, "権限" %>
+    <%= form.select :role, [ [ "担当者（member）", "member" ], [ "管理者（admin）", "admin" ] ] %>
+  </div>
+  <div class="field">
+    <%= form.label :password, user.new_record? ? "初期パスワード（8文字以上）" : "新しいパスワード（変更する場合のみ）" %>
+    <%= form.password_field :password, autocomplete: "new-password", required: user.new_record?, minlength: 8, maxlength: 72 %>
+  </div>
+  <div class="actions">
+    <%= form.submit user.new_record? ? "追加する" : "更新する" %>
+    <%= link_to "キャンセル", settings_users_path, class: "button-link" %>
+  </div>
+<% end %>

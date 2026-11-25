@@ -1,0 +1,59 @@
+<% content_for :title, @staff_member.full_name %>
+<h1><%= @staff_member.full_name %> <small class="muted">（<%= @staff_member.employee_code %>）</small></h1>
+
+<div class="actions">
+  <%= link_to "基本情報を編集", edit_staff_member_path(@staff_member), class: "button secondary" %>
+  <%= link_to "書類チェックリスト", staff_member_staff_documents_path(@staff_member), class: "button" %>
+  <%= link_to "在留期間の更新を追加", new_staff_member_residence_card_path(@staff_member), class: "button secondary" %>
+  <%= link_to "一覧へ戻る", staff_members_path, class: "button-link" %>
+</div>
+
+<section class="card">
+  <h2 style="margin-top:0">基本情報</h2>
+  <dl class="details">
+    <dt>氏名（カナ）</dt><dd><%= @staff_member.full_name_kana.presence || "—" %></dd>
+    <dt>生年月日</dt><dd><%= date_text(@staff_member.birth_on) %></dd>
+    <dt>国籍</dt><dd><%= @staff_member.nationality %></dd>
+    <dt>連絡に使う言語</dt><dd><%= @staff_member.language_name %></dd>
+    <dt>雇用開始日</dt><dd><%= date_text(@staff_member.hired_on) %></dd>
+    <dt>在籍状況</dt>
+    <dd><%= @staff_member.status == "active" ? "在籍中" : "退職（#{date_text(@staff_member.left_on)}）" %></dd>
+    <dt>職種</dt><dd><%= @staff_member.job_title.presence || "—" %></dd>
+    <dt>就業場所</dt><dd><%= @staff_member.workplace.presence || "—" %></dd>
+    <dt>時給</dt><dd><%= @staff_member.hourly_wage_yen ? "#{number_with_delimiter(@staff_member.hourly_wage_yen)}円" : "—" %></dd>
+    <dt>週所定労働時間</dt><dd><%= @staff_member.weekly_hours ? "#{@staff_member.weekly_hours}時間" : "—" %></dd>
+  </dl>
+</section>
+
+<h2>在留カードの履歴（新しい順）</h2>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>在留資格</th>
+        <th>カード番号（下4桁）</th>
+        <th>交付日</th>
+        <th>在留期間満了日</th>
+        <th>資格外活動許可</th>
+        <th>区分</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% current_card = @staff_member.current_residence_card %>
+      <% @residence_cards.each do |card| %>
+        <tr>
+          <td><%= card.status_of_residence %><%= " （現在）" if card == current_card %></td>
+          <td><%= card.card_number_last4 %></td>
+          <td><%= date_text(card.issued_on) %></td>
+          <td><%= date_text(card.expires_on) %></td>
+          <td><%= card.permission_for_activity ? "あり" : "なし" %></td>
+          <td><%= expiry_badge(ExpiryBand.for(ExpiryBand.days_left(card.expires_on))) if card == current_card %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="actions">
+  <%= link_to "在留期限一覧PDF（全スタッフ）", expiry_list_report_path(format: :pdf), class: "button secondary" %>
+</div>

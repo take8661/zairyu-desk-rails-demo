@@ -1,0 +1,65 @@
+<% content_for :title, "書類チェックリスト" %>
+<h1>書類チェックリスト：<%= @staff_member.full_name %></h1>
+<p class="muted">
+  状態は「未提出 → 提出済み → 承認済み」と進めます。差し戻し（提出済み → 未提出）や再提出もできます。
+  期限切れは毎日の期限チェックが自動で設定します。
+</p>
+<div class="actions">
+  <%= link_to "スタッフ詳細へ戻る", staff_member_path(@staff_member), class: "button-link" %>
+</div>
+
+<% if @documents.empty? %>
+  <div class="card empty">書類種別が登録されていません。管理者が「設定 → 書類種別」で追加できます。</div>
+<% else %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>書類</th>
+          <th>現在の状態</th>
+          <th>更新</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @documents.each do |document| %>
+          <tr id="document_<%= document.id %>">
+            <td>
+              <%= document.document_type.name %>
+              <% unless document.document_type.required %><span class="muted">（任意）</span><% end %>
+            </td>
+            <td><%= state_badge(document.state) %></td>
+            <td>
+              <% if document.errors.any? %>
+                <div class="errors" role="alert">
+                  <ul>
+                    <% document.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+                  </ul>
+                </div>
+              <% end %>
+              <%= form_with model: [ @staff_member, document ], method: :patch, class: "filters" do |form| %>
+                <div class="field">
+                  <%= form.label :state, "状態", for: "state_#{document.id}" %>
+                  <%= form.select :state, StaffDocument::STATE_LABELS.map { |value, label| [ label, value ] },
+                                  { selected: document.state_was || document.state }, id: "state_#{document.id}" %>
+                </div>
+                <div class="field">
+                  <%= form.label :submitted_on, "提出日", for: "submitted_on_#{document.id}" %>
+                  <%= form.date_field :submitted_on, id: "submitted_on_#{document.id}" %>
+                </div>
+                <div class="field">
+                  <%= form.label :expires_on, "有効期限", for: "expires_on_#{document.id}" %>
+                  <%= form.date_field :expires_on, id: "expires_on_#{document.id}" %>
+                </div>
+                <div class="field">
+                  <%= form.label :note, "メモ", for: "note_#{document.id}" %>
+                  <%= form.text_field :note, id: "note_#{document.id}" %>
+                </div>
+                <%= form.submit "更新", name: nil, id: "submit_#{document.id}" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

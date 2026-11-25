@@ -1,0 +1,39 @@
+<% content_for :title, "出力" %>
+<h1>出力</h1>
+<p class="muted">架空のデータによるデモです。出力される帳票は行政の正式様式ではありません。</p>
+
+<section class="card">
+  <h2 style="margin-top:0">在留期限一覧（PDF）</h2>
+  <p>在籍中のスタッフの在留期限を、期限の近い順に A4 横の1つのPDFにまとめます。区分は色と文字ラベルの両方で示します。</p>
+  <div class="actions">
+    <%= link_to "PDFを開く", expiry_list_report_path(format: :pdf), class: "button", target: "_blank", rel: "noopener" %>
+  </div>
+</section>
+
+<% if current_user.admin? %>
+  <section class="card">
+    <h2 style="margin-top:0">提出用CSV（管理者のみ）</h2>
+    <p>
+      公的な外国人雇用状況の届出で求められる項目の並びを参考にした、独自様式のCSVです（行政の正式様式ではありません）。
+      実際の届出に含まれる性別の項目は、このCSVには含めていません。
+      退職者を含む自組織の全スタッフを、社員コードの昇順で出力します。改行は CRLF です。
+    </p>
+    <table>
+      <thead>
+        <tr><th>文字コード</th><th>西暦（YYYY/MM/DD）</th><th>和暦（令和8年11月25日）</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Shift_JIS（Excel向け。表現できない文字は ? になります）</td>
+          <td><%= link_to "ダウンロード", staff_report_path(format: :csv, encoding: "sjis", era: "seireki") %></td>
+          <td><%= link_to "ダウンロード", staff_report_path(format: :csv, encoding: "sjis", era: "wareki") %></td>
+        </tr>
+        <tr>
+          <td>UTF-8（BOM付き。Excelでも開けます）</td>
+          <td><%= link_to "ダウンロード", staff_report_path(format: :csv, encoding: "utf8", era: "seireki") %></td>
+          <td><%= link_to "ダウンロード", staff_report_path(format: :csv, encoding: "utf8", era: "wareki") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+<% end %>

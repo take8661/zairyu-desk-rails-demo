@@ -1,0 +1,40 @@
+<% content_for :title, "通知" %>
+<h1>通知</h1>
+<p class="muted">
+  期限チェックが作った通知の一覧です。メールは実際には送信されません。
+  「送信予定メール（デモ表示）」として件名と本文を表示しています。
+</p>
+
+<% if @notifications.empty? %>
+  <div class="card empty">通知はまだありません。期限が近いスタッフがいると、期限チェックで通知が作られます。</div>
+<% else %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>日付</th>
+          <th>区分</th>
+          <th>スタッフ</th>
+          <th>メッセージ／送信予定メール（デモ表示）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @notifications.each do |notification| %>
+          <tr>
+            <td><%= date_text(notification.notified_on) %></td>
+            <td><%= expiry_badge(ExpiryBand::NOTIFICATION_KINDS.key(notification.kind)) %></td>
+            <td><%= link_to notification.staff_member.full_name, staff_member_path(notification.staff_member) %></td>
+            <td>
+              <%= notification.message %>
+              <details>
+                <summary>送信予定メール（デモ表示）</summary>
+                <div class="mail-preview"><strong>件名：</strong><%= notification.mail_subject %>
+<%= notification.mail_body %></div>
+              </details>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
