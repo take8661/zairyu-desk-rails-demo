@@ -4,6 +4,9 @@
 
 > **架空のデータによるデモです。** 登場する組織・人物・数値はすべて架空で、実在のものとは関係ありません。PDF・CSV は行政の正式様式ではありません。
 
+## ドキュメント
+仕様書・テストの中身と結果・作成の経緯・使用説明書は [docs/README.md](docs/README.md) にまとめています。
+
 ## 何ができるか
 - ダッシュボードで、在留期限が近いスタッフ（90／60／30日以内・期限切れ）と書類の未提出・期限切れを一目で確認
 - スタッフの登録・編集、在留カード履歴の追加（カード番号は下4桁のみ保存）
@@ -29,7 +32,7 @@ Windows で、Ruby 3.4（RubyInstaller＋DevKit）と Bundler が入っている
 Rails 8.1／Ruby 3.4／SQLite／標準認証（bcrypt）／ActiveJob（async）／Prawn＋prawn-table（PDF）／RSpec・FactoryBot・Capybara・WebMock・SimpleCov。Solid Queue・外部の管理画面gem・認可gemは使っていません（権限は `app/policies/`、テナント分離は `Current.organization` 経由の取得のみ）。定期実行は、起動時の1回・画面の「今すぐ実行」・`ruby bin/rails zairyu:daily` で代替しています。
 
 ## AIエージェント
-この実装は、AIエージェント（役割分担した複数のAI）が仕様書にもとづいて書き、別のAIがレビュー・再検査する流れで作りました。設計の判断は `docs/review_log.md`、コード規約は `docs/coding_guidelines.md`、テーブル構成は `docs/er.md` に記録しています。お知らせ文の自動作成（Claude API 連携）は今回の範囲に含めていません。
+この実装は、AIエージェント（役割分担した複数のAI）が仕様書にもとづいて書き、別のAIがレビュー・再検査する流れで作りました。作り方の流れは `docs/development_process.md`、設計の判断は `docs/review_log.md`、コード規約は `docs/coding_guidelines.md`、テーブル構成は `docs/er.md` に記録しています。お知らせ文の自動作成（Claude API 連携）は今回の範囲に含めていません。
 
 ## フォントとライセンス
 PDF の日本語は同梱の Noto Sans JP（SIL Open Font License 1.1。全文は `vendor/fonts/OFL-NotoSansJP.txt`）。Prawn は Ruby ライセンス／GPLv2／GPLv3 から選べるため、Ruby ライセンスで利用しています。
